@@ -1,25 +1,50 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default function App() {
+	const [categories, setCategories] = React.useState([]);
+  
+	React.useEffect(() => {
+	  fetch(`https://newsapi.org/v2/top-headlines/sources?apiKey=b440d88bec574f33855e67157333df2c`)
+		.then((res) => res.json())
+		.then((data) => {
+			let arr=[]
+			if(true)
+			{
+				data.sources.map((val)=>{
+					arr.push(val.category)
+				})
+			}
+			if(true)
+			{
+				let unq = [...new Set(arr)];
+				//console.log(unq);
+				setCategories(unq);
+			}
 
-export default App;
+
+		});
+	}, []);
+
+	function handlelog(){
+		window.location.href="/"
+	}
+
+  
+	return (
+	<div>
+		<div>
+			<h1 style={{textAlign:"center"}}>Home Page</h1>
+			<button className='logoutbtn btn btn-danger' onClick={handlelog}>Logout</button>
+		</div>
+	  <div>
+		<ul>
+			{categories && categories.map((cat) => {
+				return <li><Link to={`/category/${cat}`}>{cat}</Link> </li>
+			})}
+      	</ul>
+	  </div>
+	</div>
+	);
+  }
